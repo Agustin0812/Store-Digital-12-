@@ -1,0 +1,55 @@
+let cart = [];
+let isDesktopView = false;
+
+function toggleView() {
+    isDesktopView = !isDesktopView;
+    document.body.style.fontSize = isDesktopView ? '18px' : '16px';
+    alert(isDesktopView ? 'Vista de Ordenador Activada' : 'Vista Móvil Activada');
+}
+
+function addToCart(service) {
+    cart.push(service);
+    updateCartButton();
+}
+
+function updateCartButton() {
+    const cartButton = document.getElementById('cart-button');
+    cartButton.textContent = `🛒 Carrito (${cart.length})`;
+}
+
+function openCart() {
+    const cartModal = document.getElementById('cart-modal');
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+
+    cart.forEach((item, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item} `;
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Eliminar';
+        removeButton.onclick = () => removeFromCart(index);
+        listItem.appendChild(removeButton);
+        cartItems.appendChild(listItem);
+    });
+
+    cartModal.classList.remove('hidden');
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartButton();
+    openCart();
+}
+
+function closeCart() {
+    document.getElementById('cart-modal').classList.add('hidden');
+}
+
+function checkout() {
+    const message = `Buenas, me gustaría adquirir: ${cart.join(', ')}`;
+    const url = `https://wa.me/595985671923?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+    cart = [];
+    updateCartButton();
+    closeCart();
+}
